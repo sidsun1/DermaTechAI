@@ -24,10 +24,10 @@ const Navbar = () => (
     <div className="logoContainer">
       <h1>DermaTech AI</h1>
     </div>
-    <div className="navLinks">
+    <div className="navLinks" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <a href="#features">Features</a>
-      <a href="#scan">Upload a Scan</a>
-      <a href="https://github.com/sidsun/IrvineHacks">GitHub</a>
+      <a href="#scan" style={{ margin: '0 20px' }}>Upload a Scan</a>
+      <a href="https://github.com/sidsun1/IrvineHacks">GitHub</a>
     </div>
   </nav>
 );
@@ -64,15 +64,15 @@ const Features = () => (
     <div className="cardsContainer">
       <div className="featureCard">
         <h3>Real-time Health Monitoring</h3>
-        <p>Track your health status in real-time and receive alerts for any potential risks.</p>
+        <p>Track your health status in real-time and receive alerts for any potential risks. Sign up for regular reminders to checkup your skin condition.</p>
       </div>
       <div className="featureCard">
-        <h3>Health Tips</h3>
-        <p>Get personalized health tips based on your data and goals.</p>
+        <h3>Photography Tips</h3>
+        <p>Ensure that your image is in good lighting and is centered on the intended focus. For anyone taking the image, be sure to take multiple images and at least one close up.</p>
       </div>
       <div className="featureCard">
         <h3>Proactive Wellness</h3>
-        <p>Stay ahead of health issues with proactive wellness recommendations.</p>
+        <p>Stay ahead of health issues with proactive wellness recommendations from our health chat bot. Ask questions and get all the information you need about your condition.</p>
       </div>
     </div>
   </section>
@@ -81,9 +81,19 @@ const Features = () => (
 const UploadScan = ({ user }) => {
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   const handleImageChange = (event) => {
-    setImageFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleUpload = async () => {
@@ -93,21 +103,22 @@ const UploadScan = ({ user }) => {
     }
     setUploading(true);
 
-    try{
+    try {
       const reader = new FileReader();
       reader.readAsDataURL(imageFile);
       reader.onloadend = async () => {
         const base64String = reader.result;
 
         try{
-          const docRef = await addDoc(collection(db, "uploads"), {
+          await addDoc(collection(db, "uploads"), 
+          {
             userId: user.uid,
             image: base64String,
           });
 
           alert("Image uploaded!");
         }
-        catch(error){
+        catch (error){
           console.error("Error uploading image:", error);
         }
         finally{
@@ -115,7 +126,7 @@ const UploadScan = ({ user }) => {
         }
       };
     }
-    catch(error) {
+    catch (error){
       console.error("Error uploading image:", error);
       setUploading(false);
     }
@@ -123,18 +134,24 @@ const UploadScan = ({ user }) => {
 
   return (
     user && (
-      <div id="scan" className="uploadScanContainer">
+      <div id="scan" className="uploadScanContainer" style={{ textAlign: 'center' }}>
         <h2>Upload a Scan</h2>
-        <input type="file" onChange={handleImageChange} />
+        
+        <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'block', margin: '10px auto' }} />
+        
         {uploading ? (
           <p>Uploading...</p>
         ) : (
-          <button onClick={handleUpload} className="uploadButton">Upload Image</button>
+          <button onClick={handleUpload} className="uploadButton" style={{ display: 'block', margin: '10px auto' }}>Upload Image</button>
         )}
+        
+        {preview && <img src={preview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '400px', margin: '10px auto', display: 'block' }} />}
       </div>
     )
   );
 };
+
+
 
 const App = () => {
   const user = useAuth();
@@ -142,8 +159,8 @@ const App = () => {
   return (
     <div className="page">
       <Navbar />
-      <HeroSection signInWithGoogle={signInWithGoogle} signOutUser={signOutUser} user={user} />
       <Features />
+      <HeroSection signInWithGoogle={signInWithGoogle} signOutUser={signOutUser} user={user} />
       {user && <UploadScan user={user} />}
     </div>
   );

@@ -190,7 +190,6 @@ body {
   }
 }
 
-/* Styles for file upload component */
 .upload-container {
     background-color: #333;
     color: white;
@@ -248,3 +247,32 @@ body {
     border-radius: 4px;
     transition: background-color 0.3s ease;
   }
+
+.chatbotContainer {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.messagesContainer {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.message {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+.message.user {
+  background-color: #0b4e66;
+  align-self: flex-end;
+}
+
+.message.bot {
+  background-color: #1cc0a7;
+  align-self: flex-start;
+}

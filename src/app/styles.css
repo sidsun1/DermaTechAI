@@ -150,6 +150,7 @@ body {
 .featureCard:hover {
   transform: translateY(-10px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  background-color: #bfe9ff48;
 }
 
 .featureCard h3 {
@@ -188,3 +189,62 @@ body {
     width: 100%;
   }
 }
+
+/* Styles for file upload component */
+.upload-container {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin-top: 30px;
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .upload-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .file-input {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .uploadButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .uploadButton:hover {
+    background-color: #357ae8;
+  }
+
+  .upload-container{
+    background-color: #aaa;
+  }
+
+  input[type="file"]::file-selector-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }

@@ -49,6 +49,15 @@ body {
   display: flex;
 }
 
+
+/*
+.navbar .navLinks h1 {
+  color: #bfe9ff;
+  text-decoration: none;
+  margin-left: 20px;
+
+}*/
+
 .navbar .navLinks a {
   color: white;
   text-decoration: none;
@@ -84,7 +93,7 @@ body {
 .typingContainer h1 {
   font-size: 36px;
   font-weight: bold;
-  color: white;
+  color: #bfe9ff;
 }
 
 .signInButton {

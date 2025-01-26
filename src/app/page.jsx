@@ -120,11 +120,9 @@ const UploadScan = ({ user }) => {
             if (!response.ok) {
                 const error = await response.text();
                 console.error("Error response from server:", error);
-                alert("Server error: " + error);
             } else {
                 const data = await response.json();
                 console.log(data);
-                alert('Server received image data: ' + data.image);
               }
         };
     } catch (error) {

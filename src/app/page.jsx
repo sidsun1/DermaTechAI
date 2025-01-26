@@ -97,40 +97,41 @@ const UploadScan = ({ user }) => {
   };
 
   const handleUpload = async () => {
-    if(!imageFile){
-      alert("Please select an image to upload.");
-      return;
+    if (!imageFile) {
+        alert("Please select an image to upload.");
+        return;
     }
     setUploading(true);
 
     try {
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onloadend = async () => {
-        const base64String = reader.result;
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onloadend = async () => {
+            const base64String = reader.result.split(',')[1];
 
-        try{
-          await addDoc(collection(db, "uploads"), 
-          {
-            userId: user.uid,
-            image: base64String,
-          });
+            const response = await fetch('http://localhost:5000/process-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ image: base64String }),
+            });
 
-          alert("Image uploaded!");
-        }
-        catch (error){
-          console.error("Error uploading image:", error);
-        }
-        finally{
-          setUploading(false);
-        }
-      };
+            if (!response.ok) {
+                const error = await response.text();
+                console.error("Error response from server:", error);
+                alert("Server error: " + error);
+            } else {
+                const data = await response.json();
+                console.log(data);
+                alert('Server received image data: ' + data.image);
+              }
+        };
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        setUploading(false);
     }
-    catch (error){
-      console.error("Error uploading image:", error);
-      setUploading(false);
-    }
-  };
+};
 
   return (
     user && (
@@ -150,8 +151,6 @@ const UploadScan = ({ user }) => {
     )
   );
 };
-
-
 
 const App = () => {
   const user = useAuth();

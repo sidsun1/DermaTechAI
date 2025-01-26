@@ -16,7 +16,6 @@ from torch.utils.data.sampler import SubsetRandomSampler
 
 
 import numpy as np
-import pandas as pd
 
 
 def main():

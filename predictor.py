@@ -5,7 +5,6 @@ from PIL import Image
 import base64
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from io import BytesIO
 
 app = Flask(__name__)
 CORS(app)
@@ -16,7 +15,6 @@ def process_image():
         try:
             data = request.get_json()
             image_base64 = data['image']
-            print(f"Received image data: {image_base64[:30]}...")
             return jsonify({'image': image_base64})
 
         except Exception as e:

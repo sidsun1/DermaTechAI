@@ -19,20 +19,25 @@ const useAuth = () => {
   return user;
 };
 
-const Navbar = () => (
+const Navbar = ({ user, signInWithGoogle, signOutUser }) => (
   <nav className="navbar">
     <div className="logoContainer">
       <h1>DermaTech AI</h1>
     </div>
-    <div className="navLinks" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div className="navLinks">
       <a href="#features">Features</a>
-      <a href="#scan" style={{ margin: '0 20px' }}>Upload a Scan</a>
-      <a href="https://github.com/sidsun1/IrvineHacks">GitHub</a>
+      <a href="#scan">Upload a Scan</a>
+      <a href="https://github.com/sidsun1/IrvineHacks" target="_blank" rel="noopener noreferrer">GitHub</a>
+      {user ? (
+        <button className="signOutButton" onClick={signOutUser}>Sign Out</button>
+      ) : (
+        <button className="signInButton" onClick={signInWithGoogle}>Sign In</button>
+      )}
     </div>
   </nav>
 );
 
-const HeroSection = ({ signInWithGoogle, signOutUser, user }) => (
+const HeroSection = () => (
   <section id="hero" className="hero">
     <div className="typingContainer">
       <h1>
@@ -49,11 +54,6 @@ const HeroSection = ({ signInWithGoogle, signOutUser, user }) => (
           loop
         />
       </h1>
-      {!user ? (
-        <button className="signInButton" onClick={signInWithGoogle}>Sign In with Google</button>
-      ) : (
-        <button className="signOutButton" onClick={signOutUser}>Sign Out</button>
-      )}
     </div>
   </section>
 );
@@ -82,6 +82,7 @@ const UploadScan = ({ user }) => {
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [chatbotResponse, setChatbotResponse] = useState(null);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -96,12 +97,13 @@ const UploadScan = ({ user }) => {
     }
   };
 
-  const handleUpload = async () => {
+const handleUpload = async () => {
     if (!imageFile) {
         alert("Please select an image to upload.");
         return;
     }
     setUploading(true);
+    setChatbotResponse(null);
 
     try {
         const reader = new FileReader();
@@ -109,42 +111,96 @@ const UploadScan = ({ user }) => {
         reader.onloadend = async () => {
             const base64String = reader.result.split(',')[1];
 
-            const response = await fetch('http://localhost:5000/process-image', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ image: base64String }),
-            });
+            try {
+                const response = await fetch('http://localhost:5000/process-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: base64String }),
+                });
 
-            if (!response.ok) {
-                const error = await response.text();
-                console.error("Error response from server:", error);
-            } else {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+
                 const data = await response.json();
-                console.log(data);
-              }
+                setChatbotResponse(data.history);
+            } catch (fetchError) {
+                console.error("Fetch Error:", fetchError);
+                alert(`Error uploading image: ${fetchError.message}`);
+            } finally {
+                setUploading(false);
+            }
         };
     } catch (error) {
-        console.error("Error uploading image:", error);
+        console.error("File reading error:", error);
+        alert("Error processing the image file");
         setUploading(false);
     }
 };
 
   return (
     user && (
-      <div id="scan" className="uploadScanContainer" style={{ textAlign: 'center' }}>
+      <div id="scan" className="uploadScanContainer" style={{ 
+        textAlign: 'center', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center' 
+      }}>
         <h2>Upload a Scan</h2>
         
-        <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'block', margin: '10px auto' }} />
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          gap: '5px' 
+        }}>
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleImageChange} 
+          />
+          
+          {!uploading ? (
+            <button 
+              onClick={handleUpload} 
+              className="uploadButton"
+              disabled={!imageFile}
+            >
+              Upload Image
+            </button>
+          ) : (
+            <p>Uploading...</p>
+          )}
+        </div>
         
-        {uploading ? (
-          <p>Uploading...</p>
-        ) : (
-          <button onClick={handleUpload} className="uploadButton" style={{ display: 'block', margin: '10px auto' }}>Upload Image</button>
+        {preview && (
+          <img 
+            src={preview} 
+            alt="Preview" 
+            style={{ 
+              maxWidth: '100%', 
+              maxHeight: '400px', 
+              margin: '10px auto', 
+              display: 'block' 
+            }} 
+          />
         )}
         
-        {preview && <img src={preview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '400px', margin: '10px auto', display: 'block' }} />}
+        {chatbotResponse && (
+          <div className="chatbot-response" style={{ 
+            marginTop: '20px', 
+            backgroundColor: '#1cc0a7', 
+            padding: '15px', 
+            borderRadius: '8px', 
+            color: 'white' 
+          }}>
+            <h3>Diagnosis: {chatbotResponse.diagnosis}</h3>
+            <p>{chatbotResponse.information}</p>
+          </div>
+        )}
       </div>
     )
   );
@@ -155,9 +211,13 @@ const App = () => {
 
   return (
     <div className="page">
-      <Navbar />
+      <Navbar 
+        user={user} 
+        signInWithGoogle={signInWithGoogle} 
+        signOutUser={signOutUser} 
+      />
+      <HeroSection />
       <Features />
-      <HeroSection signInWithGoogle={signInWithGoogle} signOutUser={signOutUser} user={user} />
       {user && <UploadScan user={user} />}
     </div>
   );

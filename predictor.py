@@ -2,6 +2,7 @@ import torch
 from model_class import ConvolutionalNetwork
 import torchvision.transforms as transforms
 from PIL import Image
+
 import base64
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -17,38 +18,28 @@ def call_ai(result: str):
 
     model=genai.GenerativeModel(
     model_name="gemini-1.5-flash",
-    system_instruction="Keep output to a maximum of 5 sentences")
+    system_instruction="Keep output to a maximum of 10 sentences. Explain to the user like they are not a medical professional.")
 
     chat = model.start_chat(
         # Set history of conversation based on diagnosis.
 
-        # Not accessable object
         history=[
             {"role": "user", "parts": "N/A"},
             {"role": "model", "parts": "N/A"},
         ]
     )
-
     # Given information based on diagnosis                 
     d_info = chat.send_message(f"I have been diagnosed with {result}. Can you give me more information about this?")
-    print(d_info.text)
-    chat.history.append({"role": "model", "parts": d_info.text}) 
-
-    # Prompt User for Questions
-    user_response = input("Enter any questions you have concerning your diagnosis?")
-    while True:
-        if user_response == '':
-            break
-        response = chat.send_message(user_response)
-
-        # Add chat bot response and user question to history
-        chat.history.append({"role": "user", "parts": user_response})
-        chat.history.append({"role": "model", "parts": response.text})
-    return chat.history
+    
+    response = {
+        "diagnosis": result,
+        "information": d_info.text
+    }
+    return response
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/process-image": {"origins": "*"}})
 
 category = ['Basal Cell Carcinoma',
             'Squamous Cell Carcinoma',
@@ -91,11 +82,11 @@ def process_image():
                 _, prediction = torch.max(output, 1)
                 result =  category[prediction.item()]
 
-            return call_ai(result)
+            return jsonify({'history': call_ai(result)})
         except Exception as e:
             return jsonify({'error': str(e)}), 500
     else:
         return jsonify({'error': 'Invalid Content-Type, expected application/json'})
-    
+
 if __name__ == "__main__":
     app.run(debug=True)

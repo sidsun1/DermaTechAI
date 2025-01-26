@@ -21,8 +21,8 @@ body {
   align-items: center;
   justify-items: center;
   min-height: 100svh;
-  gap: 20px;
-  padding: 80px;
+  gap: 10px;
+  padding: 20px;
   font-family: var(--font-geist-sans);
 }
 
@@ -50,13 +50,10 @@ body {
 }
 
 
-/*
-.navbar .navLinks h1 {
+.navbar .logoContainer h1 {
   color: #bfe9ff;
-  text-decoration: none;
-  margin-left: 20px;
 
-}*/
+}
 
 .navbar .navLinks a {
   color: white;
@@ -82,8 +79,20 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 60vh;
+  height: 30vh;
   background: black;
+}
+
+.navbar .navLinks {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .navLinks .signInButton,
+.navbar .navLinks .signOutButton {
+  margin-left: 30px;
+  margin-top: 0px;
+  padding: 8px 16px;
 }
 
 .typingContainer {
@@ -132,7 +141,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .features h2 {
@@ -142,7 +151,7 @@ body {
 
 .cardsContainer {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   justify-content: center;
 }
 
@@ -177,6 +186,31 @@ body {
   gap: 32px;
   padding: 0 20px;
   width: 100%;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 50px;
+  background-color: black;
+}
+
+.navbar .logoContainer h1 {
+  color: #bfe9ff;
+  font-size: 36px;
+  margin: 0;
+}
+
+.navbar .navLinks a {
+  color: white;
+  text-decoration: none;
+  margin-left: 30px;
+  font-size: 18px;
+}
+
+.navbar .navLinks a:hover {
+  color: #bfe9ff;
 }
 
 @media (max-width: 600px) {

@@ -1,5 +1,5 @@
 import torch
-from model_class import ConvolutionalNetwork
+from irvinehacksapp.model.model_class import ConvolutionalNetwork
 import torchvision.transforms as transforms
 from PIL import Image
 
@@ -10,12 +10,12 @@ from io import BytesIO
 import os
 
 import google.generativeai as genai
-
-YOUR_API_KEY = "AIzaSyBSlzAb4SzjUmEKJxpX6GPPtN3z_ND18fY"
+from dotenv import load_dotenv
 
 
 def call_ai(result: str):
-    genai.configure(api_key=YOUR_API_KEY)
+    load_dotenv()
+    genai.configure(api_key=os.getenv('YOUR_API_KEY'))
 
     model=genai.GenerativeModel(
     model_name="gemini-1.5-flash",

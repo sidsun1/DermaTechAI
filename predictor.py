@@ -7,6 +7,7 @@ import base64
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from io import BytesIO
+import os
 
 import google.generativeai as genai
 
@@ -55,7 +56,8 @@ transformations = transforms.Compose([
 ])
 
 network = ConvolutionalNetwork()
-network.load_state_dict(torch.load("c:/Users/Siddharth/Code/IrvineHacksApp/irvinehacksapp/trained_model.pth"))
+model_path = os.path.join(os.path.dirname(__file__), "model", "trained_model.pth")
+network.load_state_dict(torch.load(model_path))
 network.eval()
 
 def load_image(image):

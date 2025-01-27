@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { auth, signInWithGoogle, signOutUser, db } from './firebase';
 import { ReactTyped } from 'react-typed';
 import './styles.css';
-import { collection, addDoc } from "firebase/firestore";
 
 const useAuth = () => {
   const [user, setUser] = useState(null);

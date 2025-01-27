@@ -1,3 +1,6 @@
+[Devpost]: https://devpost.com/software/dermatech-ai
+[Devpost]
+
 # Inspiration
 Just over two years ago both of Max's parents got diagnosed with skin cancer. My [Max's] mother was fortunate enough to find that she only had Basal Cell cancer, a slow growing and generally not dangerous cancer. My father, however, was diagnosed with Melanoma cancer – a quick growing skin cancer that can kill a person in under a year of diagnosis. Fortunately for him, they caught it early on and were able to remove it before he was under any threat. The aspect of this experience that stuck with me most was that this was my dad’s first dermatology appointment ever, after growing up in the sunny Florida Keys and having a mother who has faced skin cancer on numerous occasions. The only reason he scheduled an appointment was because my mother had nagged him to. If he hadn’t, he might not be here today. Sometimes I think about the people like my dad who weren’t fortunate enough to have someone force them to go to the doctor, or didn’t make the appointment in time. A tool that would allow them to easily get advice from the comfort and quickness of their home might be enough of a push to get them to make a dermatology appointment.
 

@@ -10,7 +10,7 @@ import torchvision.io as io
 import torch.optim as optim
 from PIL import Image
 import pathlib
-from model_class import ConvolutionalNetwork
+from irvinehacksapp.model.model_class import ConvolutionalNetwork
 from custom_dataset import SkinData
 from torch.utils.data.sampler import SubsetRandomSampler
 

@@ -2,9 +2,10 @@
   "name": "irvinehacksapp",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node ./scripts/create-firebase-config.js && next build",
     "start": "next start",
     "lint": "next lint"
   },
